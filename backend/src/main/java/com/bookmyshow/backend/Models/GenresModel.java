@@ -1,6 +1,8 @@
 package com.bookmyshow.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -13,6 +15,11 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIdentityInfo
+        (
+                generator = ObjectIdGenerators.PropertyGenerator.class,
+                property = "id"
+        )
 public class GenresModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO) // Auto-generates the ID valu
@@ -20,13 +27,7 @@ public class GenresModel {
     public String genre;
 
 
-    @ManyToMany
-    @JsonIgnore
-        @JoinTable(
-            name = "movie_genres",
-            joinColumns = @JoinColumn(name = "genre_id"),
-            inverseJoinColumns = @JoinColumn(name = "movie_id")
-        )
+    @ManyToMany(mappedBy = "genresModelList" ,cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<MoviesModel> moviesModelList;
 
 
